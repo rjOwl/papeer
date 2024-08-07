@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strings"
 
 	md "github.com/JohannesKaufmann/html-to-markdown"
@@ -21,6 +22,8 @@ func Filename(name string) string {
 	return filename
 }
 
+// TODO this saves it in markdown file with title and contents
+// TODO: edit this to save it in a file
 func ToMarkdownString(c chapter) string {
 	markdown := ""
 
@@ -44,6 +47,19 @@ func ToMarkdownString(c chapter) string {
 	}
 
 	return markdown
+}
+
+func HandleSubChapter(filename string, rootDirStr string, sc chapter) string {
+	if len(filename) == 0 {
+		filename = sc.Name()
+	}
+	filename = fmt.Sprintf("%s.md", Filename(filename))
+	pathToFile := filepath.Join(rootDirStr, filename)
+
+	fmt.Println("[-] pathToFile: ", pathToFile)
+	filename = ToMarkdown(sc, pathToFile)
+	fmt.Println("Inside HandleChapter!: ", filename)
+	return filename
 }
 
 func ToMarkdown(c chapter, filename string) string {
