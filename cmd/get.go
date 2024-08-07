@@ -6,11 +6,12 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"net/url"
+	"os"
 	"strings"
-
-	"github.com/spf13/cobra"
-
+	
 	"github.com/lapwat/papeer/book"
+	"github.com/spf13/cobra"
 )
 
 type GetOptions struct {
@@ -163,24 +164,48 @@ var getCmd = &cobra.Command{
 
 		// dummy root chapter to contain all subchapters
 		c := book.NewEmptyChapter()
+		rootDirList := make([]string, 0)
+
 		for _, u := range args {
+			// TODO: this will be responsible for creating directries for each link
+			urlString := u
+			parsedUrl, err := url.Parse(urlString)
+			if err != nil {
+				fmt.Println("Error parsing URL:", err)
+				return
+			}
+			dirHostname := parsedUrl.Hostname()
+			if err := os.Mkdir(dirHostname, os.ModePerm); err != nil {
+				fmt.Println("Inside NewChapterFromURL: ", err)
+			}
+			rootDirList = append(rootDirList, dirHostname)
 			newChapter := book.NewChapterFromURL(u, "", configs, 0, func(index int, name string) {})
 			c.AddSubChapter(newChapter)
-		}
+		} //["a", "b", "c"]
 		c.SetName(c.SubChapters()[0].Name())
-
+		// TODO Locate the part where the parsed data is aggregated and saved to a single MD file.
 		if getOpts.Format == "md" {
-			filename := book.ToMarkdown(c, getOpts.output)
-
-			if getOpts.stdout {
-				bytesRead, err := ioutil.ReadFile(filename)
-				if err != nil {
-					log.Fatal(err)
+			filename := ""
+			for i, sc := range c.SubChapters() {
+				//["a"+filename, "b"+filename, "c"]
+				// for loop over the cs.subchapters
+				if len(sc.SubChapters()) > 0 {
+					for _, innerSc := range sc.SubChapters() {
+						filename = book.HandleSubChapter(innerSc.Name(), rootDirList[i], innerSc)
+					}
+				} else {
+					filename = book.HandleSubChapter(sc.Name(), rootDirList[i], sc)
 				}
+				if getOpts.stdout {
+					bytesRead, err := ioutil.ReadFile(filename)
+					if err != nil {
+						log.Fatal(err)
+					}
 
-				fmt.Println(string(bytesRead))
-			} else {
-				fmt.Printf("Markdown saved to \"%s\"\n", filename)
+					fmt.Println(string(bytesRead))
+				} else {
+					fmt.Printf("Markdown saved to \"%s\"\n", filename)
+				}
 			}
 		}
 
