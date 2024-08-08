@@ -49,11 +49,8 @@ func ToMarkdownString(c chapter) string {
 	return markdown
 }
 
-func HandleSubChapter(filename string, rootDirStr string, sc chapter) string {
-	if len(filename) == 0 {
-		filename = sc.Name()
-	}
-	filename = fmt.Sprintf("%s.md", Filename(filename))
+func HandleSubChapter(sc chapter, rootDirStr string) string {
+	filename := fmt.Sprintf("%s.md", Filename(sc.Name()))
 	pathToFile := filepath.Join(rootDirStr, filename)
 
 	fmt.Println("[-] pathToFile: ", pathToFile)
