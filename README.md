@@ -143,7 +143,7 @@ Markdown saved to "The_Twelve-Factor_App.md"
 - This will allow the application to save the scraped markdown files in separate files.
 - This option is set to `false` by default
 - You can activate this feature by using `separate-md-file` and set it to `true`.
-- When `--separate-md-file=true` this will set `--use-link-name=true` automatically
+- When `--separate-md-file=true` YOU NEED TO set `--use-link-name=true`as well
 
 **Note:** This won't remove the old functionality of saving the whole scrapped content into one markdown file.
 
