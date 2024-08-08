@@ -132,6 +132,11 @@ var getCmd = &cobra.Command{
 			return errors.New("cannot use delay and threads options at the same time")
 		}
 
+		// TODO: is it better to add check so if they used separate-md-file without use-link-name it returns an error
+		if cmd.Flags().Changed("separate-md-file") && getOpts.separateMarkdown && (!cmd.Flags().Changed("use-link-name") || !getOpts.useLinkName) {
+			return errors.New("cannot use separate-md-file without setting use-link-name to true")
+		}
+
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
@@ -150,7 +155,6 @@ var getCmd = &cobra.Command{
 			config.ImagesOnly = getOpts.images
 			config.Include = getOpts.include
 			config.UseLinkName = getOpts.useLinkName
-			config.SeparateMarkdown = getOpts.separateMarkdown
 
 			// do not use link name for root level as there is not parent link
 			if index == 0 {
@@ -162,9 +166,6 @@ var getCmd = &cobra.Command{
 				config.Include = true
 			}
 
-			if config.SeparateMarkdown {
-				config.UseLinkName = true
-			}
 			configs[index] = config
 		}
 
