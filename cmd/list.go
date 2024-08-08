@@ -29,6 +29,7 @@ type ListOptions struct {
 	threads     int
 	include     bool
 	useLinkName bool
+	separateMarkdown bool
 }
 
 var listOpts *ListOptions
@@ -48,6 +49,7 @@ func init() {
 	listCmd.Flags().IntVarP(&listOpts.threads, "threads", "t", -1, "download concurrency, use with depth/selector")
 	listCmd.Flags().BoolVarP(&listOpts.include, "include", "i", false, "include URL as first chapter, use with depth/selector")
 	listCmd.Flags().BoolVarP(&listOpts.useLinkName, "use-link-name", "", false, "use link name for chapter title")
+	listCmd.Flags().BoolVarP(&listOpts.separateMarkdown, "separate-md-file", "", false, "save markdown in a separate files for each chapter")
 
 	rootCmd.AddCommand(listCmd)
 }
