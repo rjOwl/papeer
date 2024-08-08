@@ -49,15 +49,35 @@ func ToMarkdownString(c chapter) string {
 	return markdown
 }
 
+
+// HandleSubChapter calls ToMarkdown and saves a subchapter to a file.
+// The file is saved in the root directory with the filename of the subchapter.
+//
+// Parameters:
+// - sc: the subchapter to save
+// - rootDirStr: the root directory where the file will be saved
+//
+// Returns:
+// - the filename of the saved file
 func HandleSubChapter(sc chapter, rootDirStr string) string {
+	// create the filename for the file
 	filename := fmt.Sprintf("%s.md", Filename(sc.Name()))
+
+	// create the path to the file
 	pathToFile := filepath.Join(rootDirStr, filename)
 
+	// print the path to the file
 	fmt.Println("[-] pathToFile: ", pathToFile)
+
+	// save the subchapter to the file
 	filename = ToMarkdown(sc, pathToFile)
+
+	// print the filename of the saved file
 	fmt.Println("Inside HandleChapter!: ", filename)
+
 	return filename
 }
+
 
 func ToMarkdown(c chapter, filename string) string {
 	if len(filename) == 0 {
