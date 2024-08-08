@@ -136,6 +136,18 @@ papeer get https://12factor.net/ --selector='section.concrete>article>h2>a'
 Markdown saved to "The_Twelve-Factor_App.md"
 ```
 
+---------------------------------
+
+**Separate markdown cmd option <span style="color:red"> [NEW FEATURE]</span>**
+
+- This will allow the application to save the scraped markdown files in separate files.
+- This option is set to `false` by default
+- You can activate this feature by using `separate-md-file` and set it to `true`.
+
+**Note:** This won't remove the old functionality of saving the whole scrapped content into one markdown file.
+
+---------------------------------
+
 **Recursive mode options**
 
 If a navigation menu is present on a website, you can scrape the content of each subpage.
