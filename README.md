@@ -137,13 +137,13 @@ Markdown saved to "The_Twelve-Factor_App.md"
 ```
 
 ---------------------------------
-$${\color{lightgreen}NEW FEATURES}$$
-
+## <span style="color:red">NEW FEATURES</span>
 **Save markdown in Separate files cmd option**
 
 - This will allow the application to save the scraped markdown files in separate files.
 - This option is set to `false` by default
 - You can activate this feature by using `separate-md-file` and set it to `true`.
+- When `separate-md-file=true` this will set `--use-link-name=true` automatically
 
 **Note:** This won't remove the old functionality of saving the whole scrapped content into one markdown file.
 
