@@ -3,6 +3,7 @@ package book
 import (
 	"errors"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -170,3 +171,31 @@ func TestToMobiFilename(t *testing.T) {
 	}
 
 }
+
+func TestHandleSubChapter(t *testing.T) {
+	// Create a temporary directory
+	tmpDir := "testHandleSubChapter"
+	err := os.Mkdir(tmpDir, os.ModePerm)
+	if err != nil {
+		t.Fatal(err)
+	}
+	
+	testChapter := NewChapterFromURL("https://12factor.net/", "", []*ScrapeConfig{NewScrapeConfig()}, 0, func(index int, name string) {})
+
+	// Call the function to test
+	result := HandleSubChapter(testChapter, tmpDir)
+	
+	// Check the result
+	expected := filepath.Join(tmpDir, "The_Twelve-Factor_App.md")
+	if result != expected {
+		t.Errorf("Expected %s, got %s", expected, result)
+	}
+	
+	// Check if the file was created
+	_, err = os.Stat(result)
+	if os.IsNotExist(err) {
+		t.Errorf("File %s was not created", result)
+	}
+	defer os.RemoveAll(tmpDir) // clean up
+}
+
