@@ -137,7 +137,7 @@ Markdown saved to "The_Twelve-Factor_App.md"
 ```
 
 ---------------------------------
-## <span style="color:red">NEW FEATURES</span>
+## ${{\color{red} {NEW FEATURES}}}$
 **Save markdown in Separate files cmd option**
 
 - This will allow the application to save the scraped markdown files in separate files.
