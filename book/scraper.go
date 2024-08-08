@@ -30,14 +30,15 @@ type ScrapeConfig struct {
 	Include     bool
 	ImagesOnly  bool
 	UseLinkName bool
+	SeparateMarkdown bool
 }
 
 func NewScrapeConfig() *ScrapeConfig {
-	return &ScrapeConfig{0, "", false, -1, 0, false, -1, -1, true, false, false}
+	return &ScrapeConfig{0, "", false, -1, 0, false, -1, -1, true, false, false, false}
 }
 
 func NewScrapeConfigNoInclude() *ScrapeConfig {
-	return &ScrapeConfig{0, "", false, -1, 0, false, -1, -1, false, false, false}
+	return &ScrapeConfig{0, "", false, -1, 0, false, -1, -1, false, false, false, false}
 }
 
 func NewScrapeConfigs(selectors []string) []*ScrapeConfig {

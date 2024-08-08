@@ -150,6 +150,7 @@ var getCmd = &cobra.Command{
 			config.ImagesOnly = getOpts.images
 			config.Include = getOpts.include
 			config.UseLinkName = getOpts.useLinkName
+			config.SeparateMarkdown = getOpts.separateMarkdown
 
 			// do not use link name for root level as there is not parent link
 			if index == 0 {
@@ -161,6 +162,9 @@ var getCmd = &cobra.Command{
 				config.Include = true
 			}
 
+			if config.SeparateMarkdown {
+				config.UseLinkName = true
+			}
 			configs[index] = config
 		}
 
@@ -198,10 +202,10 @@ var getCmd = &cobra.Command{
 					rootDirPath := rootDirPathList[i]
 					if len(sc.SubChapters()) > 0 {
 						for _, innerSc := range sc.SubChapters() {
-							filename = book.HandleSubChapter(innerSc.Name(), rootDirPath, innerSc)
+							filename = book.HandleSubChapter(innerSc, rootDirPath)
 						}
 					} else {
-						filename = book.HandleSubChapter(sc.Name(), rootDirPath, sc)
+						filename = book.HandleSubChapter(sc, rootDirPath)
 					}
 					if getOpts.stdout {
 						bytesRead, err := ioutil.ReadFile(filename)
