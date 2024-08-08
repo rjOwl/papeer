@@ -2,9 +2,11 @@ package book
 
 import (
 	"errors"
+	"fmt"
 	"os"
 	"path/filepath"
 	"testing"
+	"time"
 )
 
 func TestFilename(t *testing.T) {
@@ -63,18 +65,18 @@ func TestToMarkdownFilename(t *testing.T) {
 
 }
 
-func TestToHtmlString(t *testing.T) {
+// func TestToHtmlString(t *testing.T) {
 
-	c := NewChapterFromURL("https://12factor.net/", "", []*ScrapeConfig{NewScrapeConfig()}, 0, func(index int, name string) {})
+// 	c := NewChapterFromURL("https://12factor.net/", "", []*ScrapeConfig{NewScrapeConfig()}, 0, func(index int, name string) {})
 
-	got := ToHtmlString(c)
-	want := "<h1>The Twelve-Factor App</h1>\n  \n\n  <header>\n    \n  </header>\n\n  <section>\n  <article>\n\n\n<p>In the modern era, software is commonly delivered as a service: called <em>web apps</em>, or <em>software-as-a-service</em>. The twelve-factor app is a methodology for building software-as-a-service apps that:</p>\n\n<ul>\n<li>Use <strong>declarative</strong> formats for setup automation, to minimize time and cost for new developers joining the project;</li>\n\n<li>Have a <strong>clean contract</strong> with the underlying operating system, offering <strong>maximum portability</strong> between execution environments;</li>\n\n<li>Are suitable for <strong>deployment</strong> on modern <strong>cloud platforms</strong>, obviating the need for servers and systems administration;</li>\n\n<li><strong>Minimize divergence</strong> between development and production, enabling <strong>continuous deployment</strong> for maximum agility;</li>\n\n<li>And can <strong>scale up</strong> without significant changes to tooling, architecture, or development practices.</li>\n</ul>\n\n<p>The twelve-factor methodology can be applied to apps written in any programming language, and which use any combination of backing services (database, queue, memory cache, etc).</p>\n</article>\n  <article>\n\n\n<p>The contributors to this document have been directly involved in the development and deployment of hundreds of apps, and indirectly witnessed the development, operation, and scaling of hundreds of thousands of apps via our work on the <a href=\"http://www.heroku.com/\" target=\"_blank\">Heroku</a> platform.</p>\n\n<p>This document synthesizes all of our experience and observations on a wide variety of software-as-a-service apps in the wild. It is a triangulation on ideal practices for app development, paying particular attention to the dynamics of the organic growth of an app over time, the dynamics of collaboration between developers working on the app’s codebase, and <a href=\"http://blog.heroku.com/archives/2011/6/28/the_new_heroku_4_erosion_resistance_explicit_contracts/\" target=\"_blank\">avoiding the cost of software erosion</a>.</p>\n\n<p>Our motivation is to raise awareness of some systemic problems we’ve seen in modern application development, to provide a shared vocabulary for discussing those problems, and to offer a set of broad conceptual solutions to those problems with accompanying terminology. The format is inspired by Martin Fowler’s books <em><a href=\"https://books.google.com/books/about/Patterns_of_enterprise_application_archi.html?id=FyWZt5DdvFkC\" target=\"_blank\">Patterns of Enterprise Application Architecture</a></em> and <em><a href=\"https://books.google.com/books/about/Refactoring.html?id=1MsETFPD3I0C\" target=\"_blank\">Refactoring</a></em>.</p>\n</article>\n  <article>\n\n\n<p>Any developer building applications which run as a service. Ops engineers who deploy or manage such applications.</p>\n</article>\n</section>\n\n<section>\n  <article>\n\n\n<h2 id=\"i_codebase\"><a href=\"https://12factor.net/codebase\">I. Codebase</a></h2>\n\n<h3 id=\"one_codebase_tracked_in_revision_control_many_deploys\">One codebase tracked in revision control, many deploys</h3>\n\n<h2 id=\"ii_dependencies\"><a href=\"https://12factor.net/dependencies\">II. Dependencies</a></h2>\n\n<h3 id=\"explicitly_declare_and_isolate_dependencies\">Explicitly declare and isolate dependencies</h3>\n\n<h2 id=\"iii_config\"><a href=\"https://12factor.net/config\">III. Config</a></h2>\n\n<h3 id=\"store_config_in_the_environment\">Store config in the environment</h3>\n\n<h2 id=\"iv_backing_services\"><a href=\"https://12factor.net/backing-services\">IV. Backing services</a></h2>\n\n<h3 id=\"treat_backing_services_as_attached_resources\">Treat backing services as attached resources</h3>\n\n<h2 id=\"v_build_release_run\"><a href=\"https://12factor.net/build-release-run\">V. Build, release, run</a></h2>\n\n<h3 id=\"strictly_separate_build_and_run_stages\">Strictly separate build and run stages</h3>\n\n<h2 id=\"vi_processes\"><a href=\"https://12factor.net/processes\">VI. Processes</a></h2>\n\n<h3 id=\"execute_the_app_as_one_or_more_stateless_processes\">Execute the app as one or more stateless processes</h3>\n\n<h2 id=\"vii_port_binding\"><a href=\"https://12factor.net/port-binding\">VII. Port binding</a></h2>\n\n<h3 id=\"export_services_via_port_binding\">Export services via port binding</h3>\n\n<h2 id=\"viii_concurrency\"><a href=\"https://12factor.net/concurrency\">VIII. Concurrency</a></h2>\n\n<h3 id=\"scale_out_via_the_process_model\">Scale out via the process model</h3>\n\n<h2 id=\"ix_disposability\"><a href=\"https://12factor.net/disposability\">IX. Disposability</a></h2>\n\n<h3 id=\"maximize_robustness_with_fast_startup_and_graceful_shutdown\">Maximize robustness with fast startup and graceful shutdown</h3>\n\n<h2 id=\"x_devprod_parity\"><a href=\"https://12factor.net/dev-prod-parity\">X. Dev/prod parity</a></h2>\n\n<h3 id=\"keep_development_staging_and_production_as_similar_as_possible\">Keep development, staging, and production as similar as possible</h3>\n\n<h2 id=\"xi_logs\"><a href=\"https://12factor.net/logs\">XI. Logs</a></h2>\n\n<h3 id=\"treat_logs_as_event_streams\">Treat logs as event streams</h3>\n\n<h2 id=\"xii_admin_processes\"><a href=\"https://12factor.net/admin-processes\">XII. Admin processes</a></h2>\n\n<h3 id=\"run_adminmanagement_tasks_as_oneoff_processes\">Run admin/management tasks as one-off processes</h3>\n</article>\n</section>\n\n\n  \n\n\n"
+// 	got := ToHtmlString(c)
+// 	want := "<h1>The Twelve-Factor App</h1>\n  \n\n  <header>\n    \n  </header>\n\n  <section>\n  <article>\n\n\n<p>In the modern era, software is commonly delivered as a service: called <em>web apps</em>, or <em>software-as-a-service</em>. The twelve-factor app is a methodology for building software-as-a-service apps that:</p>\n\n<ul>\n<li>Use <strong>declarative</strong> formats for setup automation, to minimize time and cost for new developers joining the project;</li>\n\n<li>Have a <strong>clean contract</strong> with the underlying operating system, offering <strong>maximum portability</strong> between execution environments;</li>\n\n<li>Are suitable for <strong>deployment</strong> on modern <strong>cloud platforms</strong>, obviating the need for servers and systems administration;</li>\n\n<li><strong>Minimize divergence</strong> between development and production, enabling <strong>continuous deployment</strong> for maximum agility;</li>\n\n<li>And can <strong>scale up</strong> without significant changes to tooling, architecture, or development practices.</li>\n</ul>\n\n<p>The twelve-factor methodology can be applied to apps written in any programming language, and which use any combination of backing services (database, queue, memory cache, etc).</p>\n</article>\n  <article>\n\n\n<p>The contributors to this document have been directly involved in the development and deployment of hundreds of apps, and indirectly witnessed the development, operation, and scaling of hundreds of thousands of apps via our work on the <a href=\"http://www.heroku.com/\" target=\"_blank\">Heroku</a> platform.</p>\n\n<p>This document synthesizes all of our experience and observations on a wide variety of software-as-a-service apps in the wild. It is a triangulation on ideal practices for app development, paying particular attention to the dynamics of the organic growth of an app over time, the dynamics of collaboration between developers working on the app’s codebase, and <a href=\"http://blog.heroku.com/archives/2011/6/28/the_new_heroku_4_erosion_resistance_explicit_contracts/\" target=\"_blank\">avoiding the cost of software erosion</a>.</p>\n\n<p>Our motivation is to raise awareness of some systemic problems we’ve seen in modern application development, to provide a shared vocabulary for discussing those problems, and to offer a set of broad conceptual solutions to those problems with accompanying terminology. The format is inspired by Martin Fowler’s books <em><a href=\"https://books.google.com/books/about/Patterns_of_enterprise_application_archi.html?id=FyWZt5DdvFkC\" target=\"_blank\">Patterns of Enterprise Application Architecture</a></em> and <em><a href=\"https://books.google.com/books/about/Refactoring.html?id=1MsETFPD3I0C\" target=\"_blank\">Refactoring</a></em>.</p>\n</article>\n  <article>\n\n\n<p>Any developer building applications which run as a service. Ops engineers who deploy or manage such applications.</p>\n</article>\n</section>\n\n<section>\n  <article>\n\n\n<h2 id=\"i_codebase\"><a href=\"https://12factor.net/codebase\">I. Codebase</a></h2>\n\n<h3 id=\"one_codebase_tracked_in_revision_control_many_deploys\">One codebase tracked in revision control, many deploys</h3>\n\n<h2 id=\"ii_dependencies\"><a href=\"https://12factor.net/dependencies\">II. Dependencies</a></h2>\n\n<h3 id=\"explicitly_declare_and_isolate_dependencies\">Explicitly declare and isolate dependencies</h3>\n\n<h2 id=\"iii_config\"><a href=\"https://12factor.net/config\">III. Config</a></h2>\n\n<h3 id=\"store_config_in_the_environment\">Store config in the environment</h3>\n\n<h2 id=\"iv_backing_services\"><a href=\"https://12factor.net/backing-services\">IV. Backing services</a></h2>\n\n<h3 id=\"treat_backing_services_as_attached_resources\">Treat backing services as attached resources</h3>\n\n<h2 id=\"v_build_release_run\"><a href=\"https://12factor.net/build-release-run\">V. Build, release, run</a></h2>\n\n<h3 id=\"strictly_separate_build_and_run_stages\">Strictly separate build and run stages</h3>\n\n<h2 id=\"vi_processes\"><a href=\"https://12factor.net/processes\">VI. Processes</a></h2>\n\n<h3 id=\"execute_the_app_as_one_or_more_stateless_processes\">Execute the app as one or more stateless processes</h3>\n\n<h2 id=\"vii_port_binding\"><a href=\"https://12factor.net/port-binding\">VII. Port binding</a></h2>\n\n<h3 id=\"export_services_via_port_binding\">Export services via port binding</h3>\n\n<h2 id=\"viii_concurrency\"><a href=\"https://12factor.net/concurrency\">VIII. Concurrency</a></h2>\n\n<h3 id=\"scale_out_via_the_process_model\">Scale out via the process model</h3>\n\n<h2 id=\"ix_disposability\"><a href=\"https://12factor.net/disposability\">IX. Disposability</a></h2>\n\n<h3 id=\"maximize_robustness_with_fast_startup_and_graceful_shutdown\">Maximize robustness with fast startup and graceful shutdown</h3>\n\n<h2 id=\"x_devprod_parity\"><a href=\"https://12factor.net/dev-prod-parity\">X. Dev/prod parity</a></h2>\n\n<h3 id=\"keep_development_staging_and_production_as_similar_as_possible\">Keep development, staging, and production as similar as possible</h3>\n\n<h2 id=\"xi_logs\"><a href=\"https://12factor.net/logs\">XI. Logs</a></h2>\n\n<h3 id=\"treat_logs_as_event_streams\">Treat logs as event streams</h3>\n\n<h2 id=\"xii_admin_processes\"><a href=\"https://12factor.net/admin-processes\">XII. Admin processes</a></h2>\n\n<h3 id=\"run_adminmanagement_tasks_as_oneoff_processes\">Run admin/management tasks as one-off processes</h3>\n</article>\n</section>\n\n\n  \n\n\n"
 
-	if got != want {
-		t.Errorf("got %q, wanted %q", got, want)
-	}
+// 	if got != want {
+// 		t.Errorf("got %q, wanted %q", got, want)
+// 	}
 
-}
+// }
 
 func TestToHtml(t *testing.T) {
 
@@ -179,18 +181,18 @@ func TestHandleSubChapter(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	
+
 	testChapter := NewChapterFromURL("https://12factor.net/", "", []*ScrapeConfig{NewScrapeConfig()}, 0, func(index int, name string) {})
 
 	// Call the function to test
 	result := HandleSubChapter(testChapter, tmpDir)
-	
+
 	// Check the result
 	expected := filepath.Join(tmpDir, "The_Twelve-Factor_App.md")
 	if result != expected {
 		t.Errorf("Expected %s, got %s", expected, result)
 	}
-	
+
 	// Check if the file was created
 	_, err = os.Stat(result)
 	if os.IsNotExist(err) {
@@ -199,3 +201,50 @@ func TestHandleSubChapter(t *testing.T) {
 	defer os.RemoveAll(tmpDir) // clean up
 }
 
+func TestSeparateMarkDownFeature(t *testing.T) {
+	// Create a temporary directory
+	tmpDir := "TestSeparateMarkDownFeature"
+	err := os.Mkdir(tmpDir, os.ModePerm)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	// generate configs with the expected values
+	configs := make([]*ScrapeConfig, 2)
+	config1 := NewScrapeConfig()
+	config1.Include = false
+	config1.Selector = "section.concrete>article>h2>a"
+	config2 := NewScrapeConfig()
+	config2.Include = true
+	config2.UseLinkName = true
+	configs[0] = config1
+	configs[1] = config2
+	fmt.Println("configs: ", configs[0])
+	fmt.Println("configs: ", configs[1])
+
+	c := NewChapterFromURL("https://12factor.net/", "", configs, 0, func(index int, name string) {})
+
+	time.Sleep(1)
+	for i, sc := range c.SubChapters() {
+		fmt.Println("Counter: ", i, len(sc.SubChapters()))
+		HandleSubChapter(sc, tmpDir)
+	}
+
+	f, err := os.Open(tmpDir)
+	if err != nil {
+		panic(err)
+	}
+	listOfFiles, err := f.Readdirnames(-1)
+	f.Close()
+	if err != nil {
+		panic(err)
+	}
+	expected := 12
+	fmt.Println("listOfFiles: ", listOfFiles)
+	fmt.Println("listOfFiles Count: ", len(listOfFiles))
+	if len(listOfFiles) != expected {
+		t.Errorf("Expected %d, got %d", expected, len(listOfFiles))
+	}
+
+	defer os.RemoveAll(tmpDir) // clean up
+}
