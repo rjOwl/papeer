@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
-	"net/url"
-	"os"
 	"strings"
 
 	"github.com/lapwat/papeer/book"
@@ -155,6 +153,7 @@ var getCmd = &cobra.Command{
 			config.ImagesOnly = getOpts.images
 			config.Include = getOpts.include
 			config.UseLinkName = getOpts.useLinkName
+			config.SeparateMarkdown = getOpts.separateMarkdown
 
 			// do not use link name for root level as there is not parent link
 			if index == 0 {
@@ -171,24 +170,8 @@ var getCmd = &cobra.Command{
 
 		// dummy root chapter to contain all subchapters
 		c := book.NewEmptyChapter()
-		rootDirPathList := make([]string, 0)
 
 		for _, u := range args {
-			// This will be responsible for creating directries for each link
-			// TODO: refactor this to a function
-			if getOpts.separateMarkdown {
-				urlString := u
-				parsedUrl, err := url.Parse(urlString)
-				if err != nil {
-					fmt.Println("Error parsing URL:", err)
-					return
-				}
-				dirHostname := parsedUrl.Hostname()
-				if err := os.Mkdir(dirHostname, os.ModePerm); err != nil {
-					fmt.Println("Inside NewChapterFromURL: ", err)
-				}
-				rootDirPathList = append(rootDirPathList, dirHostname)
-			}
 			newChapter := book.NewChapterFromURL(u, "", configs, 0, func(index int, name string) {})
 			c.AddSubChapter(newChapter)
 		} //["a", "b", "c"]
@@ -197,15 +180,15 @@ var getCmd = &cobra.Command{
 		if getOpts.Format == "md" {
 			if getOpts.separateMarkdown {
 				filename := ""
-				for i, sc := range c.SubChapters() {
-					//["a"+filename, "b"+filename, "c"]
-					// for loop over the cs.subchapters
-					rootDirPath := rootDirPathList[i]
+				for _, sc := range c.SubChapters() {
+					// this will create a directory for each subchapter in the chapter
+					rootDirPath := book.CreateDirFromURL(sc.Url())
 					if len(sc.SubChapters()) > 0 {
 						for _, innerSc := range sc.SubChapters() {
 							filename = book.HandleSubChapter(innerSc, rootDirPath)
 						}
 					} else {
+						// to handle just one page
 						filename = book.HandleSubChapter(sc, rootDirPath)
 					}
 					if getOpts.stdout {

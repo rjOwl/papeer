@@ -3,6 +3,7 @@ package book
 import (
 	"fmt"
 	"log"
+	"net/url"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -22,8 +23,6 @@ func Filename(name string) string {
 	return filename
 }
 
-// TODO this saves it in markdown file with title and contents
-// TODO: edit this to save it in a file
 func ToMarkdownString(c chapter) string {
 	markdown := ""
 
@@ -41,14 +40,42 @@ func ToMarkdownString(c chapter) string {
 		markdown += fmt.Sprintf("%s\n\n\n", content)
 	}
 
-	// subchapters content
-	for _, sc := range c.SubChapters() {
-		markdown += fmt.Sprintf("%s\n\n\n", ToMarkdownString(sc))
+			// subchapters content
+		for _, sc := range c.SubChapters() {
+			markdown += fmt.Sprintf("%s\n\n\n", ToMarkdownString(sc))
 	}
 
 	return markdown
 }
 
+// CreateDirFromURL creates a directory with the hostname of a given URL.
+//
+// Parameters:
+// - link: the URL to extract the hostname from.
+//
+// Returns:
+// - the hostname of the URL, or an empty string if the URL cannot be parsed.
+func CreateDirFromURL(link string) string {
+	// Parse the URL
+	parsedUrl, err := url.Parse(link)
+	if err != nil {
+		// If the URL cannot be parsed, print the error and return an empty string.
+		fmt.Println("Error parsing URL:", err)
+		return ""
+	}
+
+	// Extract the hostname from the parsed URL
+	dirHostname := parsedUrl.Hostname()
+	fmt.Println("Inside CreateDirFromURL dirHostname: ", dirHostname)
+	// Create the directory with the hostname
+	if err := os.Mkdir(dirHostname, os.ModePerm); err != nil {
+		// If an error occurs while creating the directory, print the error.
+		fmt.Println("Inside CreateDirFromURL: ", err)
+	}
+
+	// Return the hostname
+	return dirHostname
+}
 
 // HandleSubChapter calls ToMarkdown and saves a subchapter to a file.
 // The file is saved in the root directory with the filename of the subchapter.

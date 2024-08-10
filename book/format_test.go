@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"testing"
 	"time"
+	"github.com/stretchr/testify/assert"
+
 )
 
 func TestFilename(t *testing.T) {
@@ -247,4 +249,33 @@ func TestSeparateMarkDownFeature(t *testing.T) {
 	}
 
 	defer os.RemoveAll(tmpDir) // clean up
+}
+
+func TestCreateDirFromURL(t *testing.T) {
+	// Test case: valid URL
+	hostname := CreateDirFromURL("https://example.com")
+	assert.Equal(t, "example.com", hostname)
+
+	defer os.RemoveAll(hostname) // clean up
+}
+
+func TestCreateExistingDirFromURL(t *testing.T) {
+	// Test case: directory already exists
+	err := os.Mkdir("example.com", os.ModePerm)
+	if err != nil {
+		t.Logf("Error creating directory: %v", err)
+	}
+	// Test case: valid URL
+	hostname := CreateDirFromURL("https://example.com")
+	assert.Equal(t, "example.com", hostname)
+	
+	defer os.RemoveAll(hostname) // clean up
+}
+
+func TestCreateInvalidDirFromURL(t *testing.T) {
+	// Test case: invalid URL
+	hostname := CreateDirFromURL("invalid-url")
+	assert.Equal(t, "", hostname)
+	defer os.RemoveAll(hostname) // clean up
+
 }
