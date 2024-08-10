@@ -30,14 +30,15 @@ type ScrapeConfig struct {
 	Include     bool
 	ImagesOnly  bool
 	UseLinkName bool
+	SeparateMarkdown bool
 }
 
 func NewScrapeConfig() *ScrapeConfig {
-	return &ScrapeConfig{0, "", false, -1, 0, false, -1, -1, true, false, false}
+	return &ScrapeConfig{0, "", false, -1, 0, false, -1, -1, true, false, false, false}
 }
 
 func NewScrapeConfigNoInclude() *ScrapeConfig {
-	return &ScrapeConfig{0, "", false, -1, 0, false, -1, -1, false, false, false}
+	return &ScrapeConfig{0, "", false, -1, 0, false, -1, -1, false, false, false, false}
 }
 
 func NewScrapeConfigs(selectors []string) []*ScrapeConfig {
@@ -251,8 +252,7 @@ func NewChapterFromURL(url, linkName string, configs []*ScrapeConfig, index int,
 		}
 
 	}
-
-	return chapter{string(body), name, article.Byline, content, subchapters, config}
+	return chapter{url, string(body), name, article.Byline, content, subchapters, config}
 }
 
 func tableOfContent(url string, config *ScrapeConfig, subConfig *ScrapeConfig, quiet bool) ([]chapter, chapter) {

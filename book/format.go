@@ -40,9 +40,18 @@ func ToMarkdownString(c chapter) string {
 		markdown += fmt.Sprintf("%s\n\n\n", content)
 	}
 
-			// subchapters content
+	if c.config.SeparateMarkdown {
+		// subchapters content
+		for _, sc := range c.SubChapters() {
+			rootDirPath := CreateDirFromURL(sc.Url())
+			fmt.Println("[-] inside the looop: ", sc.Url())
+			HandleSubChapter(sc, rootDirPath)
+		}
+	} else {
+		// subchapters content
 		for _, sc := range c.SubChapters() {
 			markdown += fmt.Sprintf("%s\n\n\n", ToMarkdownString(sc))
+		}
 	}
 
 	return markdown
